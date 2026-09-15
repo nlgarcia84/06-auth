@@ -13,7 +13,7 @@ if (!isLoggedIn || !user) {
   return Astro.redirect("/login");
 }
 
-const { avatar, email, name, emailVerified } = user;
+const { avatar, email, name } = user;
 
 // // Recargar el usuario para obtener la información más reciente
 // await firebaseUser?.reload();
@@ -26,6 +26,9 @@ const { avatar, email, name, emailVerified } = user;
 // } = firebaseUser;
 
 // const name = displayName ?? "No display name";
+const firebaseUser = firebase.auth.currentUser;
+await firebaseUser?.reload();
+const { emailVerified } = firebaseUser!;
 ---
 
 <MainLayout>
