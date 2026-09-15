@@ -1,3 +1,5 @@
+/// <reference types="astro/client" />
+
 import { defineMiddleware } from "astro:middleware";
 import type { MiddlewareNext } from "node_modules/astro/dist/types/public/common";
 

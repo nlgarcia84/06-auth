@@ -1,21 +1,31 @@
 ---
-import MainLayout from "@/layouts/MainLayout.astro";
 import { firebase } from "@/firebase/config";
+import MainLayout from "@/layouts/MainLayout.astro";
 
-const firebaseUser = firebase.auth.currentUser;
+const { user, isLoggedIn } = Astro.locals;
+// const firebaseUser = firebase.auth.currentUser;
 
-if (firebaseUser === null) {
+// if (firebaseUser === null) {
+//   return Astro.redirect("/login");
+// }
+
+if (!isLoggedIn || !user) {
   return Astro.redirect("/login");
 }
 
-const {
-  displayName = "No display name",
-  email,
-  emailVerified,
-  photoURL,
-} = firebaseUser;
+const { avatar, email, name, emailVerified } = user;
 
-const name = displayName ?? "No display name";
+// // Recargar el usuario para obtener la información más reciente
+// await firebaseUser?.reload();
+
+// const {
+//   displayName = "No display name",
+//   email,
+//   emailVerified,
+//   photoURL,
+// } = firebaseUser;
+
+// const name = displayName ?? "No display name";
 ---
 
 <MainLayout>
@@ -25,10 +35,10 @@ const name = displayName ?? "No display name";
   >
     <div class="card w-96 mx-auto bg-white shadow-xl hover:shadow rounded">
       {
-        photoURL ? (
+        avatar ? (
           <img
             class="w-32 mx-auto rounded-full -mt-20 border-8 border-white"
-            src={photoURL}
+            src={avatar}
             alt={`Avatar de ${name}`}
           />
         ) : (

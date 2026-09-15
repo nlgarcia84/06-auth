@@ -13,5 +13,5 @@ export default defineConfig({
     plugins: [tailwindcss()],
   },
   output: "server",
-  adapter: isProduction ? netlify() : undefined,
+  adapter: netlify(),
 });

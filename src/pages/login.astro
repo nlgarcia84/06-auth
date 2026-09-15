@@ -62,6 +62,16 @@ const remember_me = email ? true : false;
           >
             Ingresar
           </button>
+          <div class="flex flex-1 w-full my-3">
+            <div class="w-full border-t-2 border-gray-500"></div>
+          </div>
+          <button
+            type="button"
+            id="btn-google"
+            class="w-full flex justify-center bg-red-400 text-gray-100 p-3 rounded-full tracking-wide font-semibold shadow-lg cursor-pointer transition ease-in duration-500"
+          >
+            Ingresar con Google
+          </button>
         </div>
       </form>
       <div class="pt-5 text-center text-gray-400 text-xs">
@@ -83,11 +93,14 @@ const remember_me = email ? true : false;
 </AuthLayout>
 
 <script>
+  import { firebase } from "@/firebase/config";
   import { actions } from "astro:actions";
+  import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
   import Swal from "sweetalert2";
 
   const form = document.querySelector("form") as HTMLFormElement;
   const btnSubmit = document.querySelector("#btn-submit") as HTMLButtonElement;
+  const btnGoogle = document.querySelector("#btn-google") as HTMLButtonElement;
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -104,5 +117,23 @@ const remember_me = email ? true : false;
       return;
     }
     window.location.replace("/protected");
+  });
+
+  btnGoogle.addEventListener("click", async (event) => {
+    btnGoogle.setAttribute("disabled", "true");
+    const provider = new GoogleAuthProvider();
+    try {
+      // Paso 1 - Obtener las credenciales del lado del cliente
+      const credentials = await signInWithPopup(firebase.auth, provider);
+
+      // Paso 2 - Verificar las credenciales en el backend
+      const { data, error } = await actions.loginWithGoogle(credentials);
+      if (error) {
+        throw new Error(error.message);
+      }
+      btnGoogle.innerHTML = "Ingresando...";
+      window.location.replace("/protected");
+    } catch {}
+    btnGoogle.removeAttribute("disabled");
   });
 </script>

@@ -27,7 +27,10 @@ export const loginUser = defineAction({
         email,
         password,
       );
-      return user;
+      return {
+        uid: user.user.uid,
+        email: user.user.email,
+      };
     } catch (error) {
       const firebaseError = error as AuthError;
       if (firebaseError.code === "auth/email-already-in-use") {
